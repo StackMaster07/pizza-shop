@@ -11,17 +11,20 @@ class Pizza < ApplicationRecord
   validates :description, presence: true
 
 
-  before_save :calculate_price
+  after_save :calculate_price
 
   private
 
   def calculate_price
+    reload
     size_price = Constants::DEFAULT_PIZZA_PRICES[size]
 
-    toppings_price = pizza_toppings.sum do |pt|
+    toppings_price = pizza_toppings.includes(:topping).sum do |pt|
       pt.topping.price_per_piece * pt.quantity
     end
 
-    self.price = size_price + toppings_price
+    final_price = size_price + toppings_price
+    
+    update_column(:price, final_price)
   end
 end

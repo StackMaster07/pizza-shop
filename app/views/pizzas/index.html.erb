@@ -1,30 +1,33 @@
-<div class="container">
+<div class="container mt-5">
   <div class="card shadow-lg rounded m-2">
-    <h3 class="mb-0 text-center card-header">Create a New Topping</h3>
+    <h3 class="mb-0 text-center card-header">Create a new Masterpiece</h3>
     <div class="card-body">
-    <%= turbo_frame_tag "toppings_form", data: { turbo_cache: "false" } do %> 
-        <%= render "form", topping: Topping.new %>
+    <% if true %>
+    <%= turbo_frame_tag "pizza_form", data: { turbo_cache: "false" } do %> 
+        <%= render "form", pizza: Pizza.new %>
+    <% end %>
     <% end %>
     </div>
   </div>
   <div class="row justify-content-center">
-    <div class="col-md-8">
+    <div class="col-md-10">
       <div class="card shadow-lg rounded">
         <div class="card-header bg-primary text-white">
-          <h3 class="mb-0 text-center">Toppings List</h3>
+          <h3 class="mb-0 text-center">My Pizza Dashboard</h3>
         </div>
         <div class="card-body">
           <table class="table table-bordered table-striped">
             <thead class="table-dark">
               <tr>
                 <th>Name</th>
-                <th>In Stock</th>
-                <th>Price per Piece</th>
+                <th>Description</th>
+                <th>Price($)</th>
+                <th>Toppings</th>
                 <th class="text-center">Actions</th>
               </tr>
             </thead>
-            <tbody id="toppings_list">
-              <%= render partial: "topping", collection: @toppings, as: :topping %>
+            <tbody id="pizza_list">
+              <%= render partial: "pizza", collection: @pizzas, as: :pizza %>
             </tbody>
           </table>
         </div>
