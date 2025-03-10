@@ -1,0 +1,25 @@
+<%= form_with model: topping, url: topping.persisted? ? topping_path(topping) : toppings_path, 
+              method: topping.persisted? ? :patch : :post, 
+              data: { turbo_frame: "toppings_form" }, 
+              class: "needs-validation" do |f| %>
+
+  <div class="mb-3">
+    <%= f.label :name, "Topping Name", class: "form-label" %>
+    <%= f.text_field :name, class: "form-control", placeholder: "Enter topping name", required: true %>
+  </div>
+
+  <div class="mb-3">
+  <%= f.label :quantity, "Stock Quantity", class: "form-label" %>
+  <%= f.number_field :quantity, class: "form-control", min: "0", placeholder: "Enter available stock", required: true %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :price_per_piece, "Price per Piece ($)", class: "form-label" %>
+    <%= f.number_field :price_per_piece, class: "form-control", step: "0.01", min: "0", placeholder: "Enter price per piece", required: true %>
+  </div>
+
+  <div class="text-center">
+    <%= f.submit topping.persisted? ? "Update Topping" : "Create Topping", class: "btn btn-success px-4" %>
+    <%= link_to "Cancel", toppings_path, class: "btn btn-secondary ms-2", data: { turbo_action: "replace" } %>
+  </div>
+<% end %>

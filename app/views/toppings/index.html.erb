@@ -1,0 +1,36 @@
+<div class="container">
+<div class="card shadow-lg rounded m-2">
+  <h3 class="mb-0 text-center card-header">Create a New Topping</h3>
+  <div class="card-body">
+  <%= turbo_frame_tag "toppings_form", data: { turbo_cache: "false" } do %> 
+      <%= render "form", topping: Topping.new %>
+  <% end %>
+  </div>
+</div>
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-lg rounded">
+        <div class="card-header bg-primary text-white">
+          <h3 class="mb-0 text-center">Toppings List</h3>
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+              <tr>
+                <th>Name</th>
+                <th>In Stock</th>
+                <th>Price per Piece</th>
+                <th class="text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="toppings_list">
+              <% @toppings.each do |topping| %>
+                <%= render partial: "topping", locals: { topping: topping } %>  
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
