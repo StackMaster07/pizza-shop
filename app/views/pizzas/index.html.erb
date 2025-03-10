@@ -1,19 +1,19 @@
 <div class="container mt-5">
-  <div class="card shadow-lg rounded m-2">
-    <h3 class="mb-0 text-center card-header">Create a new Masterpiece</h3>
-    <div class="card-body">
-    <% if true %>
-    <%= turbo_frame_tag "pizza_form", data: { turbo_cache: "false" } do %> 
-        <%= render "form", pizza: Pizza.new %>
-    <% end %>
-    <% end %>
+  <% if current_user.chef? %>
+    <div class="card shadow-lg rounded m-2">
+      <h3 class="mb-0 text-center card-header">Create a new Masterpiece</h3>
+      <div class="card-body">
+        <%= turbo_frame_tag "pizza_form", data: { turbo_cache: "false" } do %> 
+            <%= render "form", pizza: Pizza.new %>
+        <% end %>
+      </div>
     </div>
-  </div>
+   <% end %>
   <div class="row justify-content-center">
     <div class="col-md-10">
       <div class="card shadow-lg rounded">
         <div class="card-header bg-primary text-white">
-          <h3 class="mb-0 text-center">My Pizza Dashboard</h3>
+          <h3 class="mb-0 text-center">Pizza\'s List</h3>
         </div>
         <div class="card-body">
           <table class="table table-bordered table-striped">
@@ -23,7 +23,9 @@
                 <th>Description</th>
                 <th>Price($)</th>
                 <th>Toppings</th>
-                <th class="text-center">Actions</th>
+                <% if current_user.chef? %>
+                  <th class="text-center">Actions</th>
+                <% end %>
               </tr>
             </thead>
             <tbody id="pizza_list">

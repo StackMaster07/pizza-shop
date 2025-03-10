@@ -1,8 +1,9 @@
 class ToppingsController < ApplicationController
+  include Pundit::Authorization
   before_action :set_topping, only: %i[edit update destroy]
 
   def index
-    @toppings = Topping.order(:created_at)
+    @toppings = policy_scope(Topping).order(:created_at)
     @topping = Topping.new
   rescue StandardError => e
     flash[:error] = "An error occurred while loading toppings: #{e.message}"
@@ -11,6 +12,7 @@ class ToppingsController < ApplicationController
 
   def create
     @topping = Topping.new(topping_params)
+    authorize @topping
     if @topping.save
       respond_to do |format|
         format.turbo_stream do
@@ -32,6 +34,7 @@ class ToppingsController < ApplicationController
   end
 
   def edit
+    authorize @topping
     respond_to do |format|
       format.turbo_stream do
         render turbo_stream: turbo_stream.replace('toppings_form', partial: 'form', locals: { topping: @topping })
@@ -41,6 +44,7 @@ class ToppingsController < ApplicationController
   end  
 
   def update
+    authorize @topping
     if @topping.update(topping_params)
       respond_to do |format|
         format.turbo_stream do
@@ -62,6 +66,7 @@ class ToppingsController < ApplicationController
   end
 
   def destroy
+    authorize @topping
     if @topping.destroy
       respond_to do |format|
         format.html { redirect_to toppings_path, notice: 'Topping was successfully deleted.' }

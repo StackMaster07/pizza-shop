@@ -14,6 +14,9 @@ gem "devise"
 gem 'bootstrap', '~> 5.3.0'
 gem 'jquery-rails'
 gem 'byebug'
+gem "rspec-rails", "~> 7.1"
+gem "factory_bot_rails", "~> 6.4"
+gem "pundit"
 
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
