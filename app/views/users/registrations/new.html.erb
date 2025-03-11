@@ -1,39 +1,45 @@
-<h2>Sign up</h2>
+<div class="d-flex justify-content-center align-items-center">
+  <div class="card shadow-lg p-4" style="width: 400px;">
+    <h2 class="text-center mb-4">Sign Up</h2>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-  <%= render "users/shared/error_messages", resource: resource %>
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "needs-validation" }) do |f| %>
+      <%= render "users/shared/error_messages", resource: resource %>
 
-  <div class="field">
-    <%= f.label :user_name %><br />
-    <%= f.text_field :user_name, autofocus: true, autocomplete: "username" %>
+      <div class="mb-3">
+        <%= f.label :user_name, class: "form-label" %>
+        <%= f.text_field :user_name, autofocus: true, autocomplete: "username", class: "form-control", placeholder: "Enter your username" %>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :email, class: "form-label" %>
+        <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control", placeholder: "Enter your email" %>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :role, class: "form-label" %>
+        <%= f.select :role, [['Owner', 'owner'], ['Chef', 'chef']], prompt: "Select a role", class: "form-select" %>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :password, class: "form-label" %>
+        <% if @minimum_password_length %>
+          <small class="text-muted">(<%= @minimum_password_length %> characters minimum)</small>
+        <% end %>
+        <%= f.password_field :password, autocomplete: "new-password", class: "form-control", placeholder: "Enter your password" %>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :password_confirmation, class: "form-label" %>
+        <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "form-control", placeholder: "Confirm your password" %>
+      </div>
+
+      <div class="d-grid">
+        <%= f.submit "Sign up", class: "btn btn-success btn-block" %>
+      </div>
+    <% end %>
+
+    <div class="text-center mt-3">
+      <%= render "users/shared/links" %>
+    </div>
   </div>
-
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
-  </div>
-
-  <div class="field">
-    <%= f.label :role %><br />
-    <%= f.select :role, [['Owner', 'owner'], ['Chef', 'chef']], prompt: "Select a role" %>
-  </div>
-
-  <div class="field">
-    <%= f.label :password %>
-    <% if @minimum_password_length %>
-    <em>(<%= @minimum_password_length %> characters minimum)</em>
-    <% end %><br />
-    <%= f.password_field :password, autocomplete: "new-password" %>
-  </div>
-
-  <div class="field">
-    <%= f.label :password_confirmation %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
-  </div>
-
-  <div class="actions">
-    <%= f.submit "Sign up" %>
-  </div>
-<% end %>
-
-<%= render "users/shared/links" %>
+</div>

@@ -14,3 +14,8 @@
  *= require_tree .
  *= require_self
  */
+
+ .form-check-input:checked {
+  background-color: #28a745 !important; /* Bootstrap success green */
+  border-color: #28a745 !important;
+}

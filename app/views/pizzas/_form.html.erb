@@ -2,51 +2,54 @@
               method: pizza.persisted? ? :patch : :post, 
               data: { turbo_frame: "pizza_form" }, 
               class: "needs-validation" do |f| %>
-  
-  <div class="mb-3">
-    <%= f.label :name, "Pizza Name", class: "form-label" %>
-    <%= f.text_field :name, class: "form-control", placeholder: "What you want its name to be?", required: true %>
-  </div>
 
-  <div class="mb-3">
-    <%= f.label :description, "Description", class: "form-label" %>
-    <%= f.text_area :description, class: "form-control", rows: 3, placeholder: "Enter description for this", required: true %>
-  </div>
+  <div class="card shadow-lg rounded m-2">
+    <h3 class="mb-0 text-center card-header bg-success text-white"><%= pizza.persisted? ? "Manage this Pizza" : "Create a new Masterpiece" %></h3>
+    <div class="card-body">
+    
+      <div class="mb-3">
+        <%= f.text_field :name, class: "form-control", placeholder: "What you want its name to be?", required: true %>
+      </div>
 
-  <div class="mb-3" data-controller="toppings">
-    <%= f.label :toppings, "Select Toppings & Quantity", class: "form-label fw-bold" %>
+      <div class="mb-3">
+        <%= f.text_area :description, class: "form-control", rows: 3, placeholder: "Enter description for this", required: true %>
+      </div>
 
-    <div class="border p-3 rounded bg-light">
-      <% Topping.all.each do |topping| %>
-        <% pizza_topping = pizza_topping(pizza, topping) %>
+      <div class="mb-3" data-controller="toppings">
+        <%= f.label :toppings, "Select Toppings & Quantity", class: "form-label fw-bold" %>
 
-        <div class="d-flex align-items-center justify-content-between mb-2 p-2 border-bottom">
-          <div class="form-check">
-            <%= check_box_tag "pizza[pizza_toppings_attributes][][topping_id]", topping.id, pizza_topping.present?, 
-                              class: "form-check-input", 
-                              data: { toppings_target: "checkbox", action: "change->toppings#toggleQuantity" } %>
-            <%= label_tag "pizza_toppings_attributes_#{topping.id}", topping.name, 
-                          class: "form-check-label ms-2 fw-bold" %>
-          </div>
+        <div class="border p-3 rounded bg-light">
+          <% Topping.all.each do |topping| %>
+            <% pizza_topping = pizza_topping(pizza, topping) %>
 
-          <span class="text-muted small">Stock: <%= topping.quantity %></span>
+            <div class="d-flex align-items-center justify-content-between mb-2 p-2 border-bottom">
+              <div class="form-check">
+                <%= check_box_tag "pizza[pizza_toppings_attributes][][topping_id]", topping.id, pizza_topping.present?, 
+                                  class: "form-check-input form-check-input", 
+                                  data: { toppings_target: "checkbox", action: "change->toppings#toggleQuantity" } %>
+                <%= label_tag "pizza_toppings_attributes_#{topping.id}", topping.name, 
+                              class: "form-check-label ms-2 fw-bold" %>
+                <p class="text-muted small">Stock: <%= topping.quantity %></p>
+              </div>
 
-          <%= number_field_tag "pizza[pizza_toppings_attributes][][quantity]", pizza_topping&.quantity, 
-                             class: "form-control ms-3", 
-                             min: 1, max: topping.quantity, step: 1, 
-                             placeholder: "Qty", 
-                             style: "width: 80px;", 
-                             disabled: pizza_topping.nil?, 
-                             data: { topping_id: topping.id, toppings_target: "quantity" } %>
+              <div class="d-flex justify-content-center">
+                <%= number_field_tag "pizza[pizza_toppings_attributes][][quantity]", pizza_topping&.quantity, 
+                                  class: "form-control ms-3", 
+                                  min: 1, max: topping.quantity, step: 1, 
+                                  placeholder: "Qty", 
+                                  style: "width: 80px;", 
+                                  disabled: pizza_topping.nil?, 
+                                  data: { topping_id: topping.id, toppings_target: "quantity" } %>
+              </div>
+            </div>
+          <% end %>
         </div>
-      <% end %>
+        <small class="text-muted">Check a topping and enter a quantity (max: stock available).</small>
+      </div>
+      <div class="text-center">
+        <%= f.submit pizza.persisted? ? "Update Pizza" : "Create Pizza", class: "btn btn-success px-4" %>
+        <%= link_to "Cancel", pizzas_path, class: "btn btn-secondary ms-2", data: { turbo_action: "replace" } %>
+      </div>
     </div>
-    <small class="text-muted">Check a topping and enter a quantity (max: stock available).</small>
-  </div>
-
-
-  <div class="text-center">
-    <%= f.submit pizza.persisted? ? "Update Pizza" : "Create Pizza", class: "btn btn-success px-4" %>
-    <%= link_to "Cancel", pizzas_path, class: "btn btn-secondary ms-2", data: { turbo_action: "replace" } %>
   </div>
 <% end %>
