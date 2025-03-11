@@ -7,9 +7,6 @@ class PizzasController < ApplicationController
   def index
     @pizzas = policy_scope(Pizza).includes(:toppings, :pizza_toppings)
     @pizza = Pizza.new
-  rescue StandardError => e
-    flash[:error] = "An error occurred while loading pizzas: #{e.message}"
-    redirect_to pizzas_path
   end
 
   def create
@@ -18,18 +15,21 @@ class PizzasController < ApplicationController
 
     if @pizza.save
       update_toppings(@pizza, params[:pizza][:pizza_toppings_attributes])
+      flash.now[:notice] = 'Pizza successfully created!'
+  
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: [
+            turbo_stream.replace('flash-container', partial: 'shared/flash_messages'),
             turbo_stream.replace('pizza_form', partial: 'form', locals: { pizza: Pizza.new }),
             turbo_stream.append('pizza_list', partial: 'pizza', locals: { pizza: @pizza })
           ]
         end
-        format.html { redirect_to pizzass_path, notice: 'Pizza successfully created!' }
+        format.html { redirect_to pizzas_path, notice: 'Pizza successfully created!' }
       end
     else
+      flash.now[:alert] = @pizza.errors.full_messages.join(', ')
       render turbo_stream: turbo_stream.replace('flash-container', partial: 'shared/flash_messages'), status: :unprocessable_entity
-      redirect_to pizzas_path
     end
   end
 
@@ -86,7 +86,10 @@ class PizzasController < ApplicationController
         render turbo_stream: turbo_stream.replace("flash-container", partial: "shared/flash_messages", locals: { flash: { alert: "Could not delete pizza." } }),
                status: :unprocessable_entity
       end
-      format.html { redirect_to pizzas_path, alert: "Could not delete pizza." }
+      format.html do
+        flash[:alert] = "Could not delete pizza."
+        redirect_to pizzas_path
+      end
     end
   end
 

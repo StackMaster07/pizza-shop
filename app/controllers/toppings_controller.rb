@@ -3,11 +3,9 @@ class ToppingsController < ApplicationController
   before_action :set_topping, only: %i[edit update destroy]
 
   def index
+    authorize Topping
     @toppings = policy_scope(Topping).order(:created_at)
     @topping = Topping.new
-  rescue StandardError => e
-    flash[:error] = "An error occurred while loading toppings: #{e.message}"
-    redirect_to root_path
   end
 
   def create
