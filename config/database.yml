@@ -2,20 +2,21 @@ default: &default
   adapter: postgresql
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+development:
+  <<: *default
+  database: my_pizza_shop_development
   username: postgres
   password: postgres
   host: localhost
 
-development:
-  <<: *default
-  database: pizza_shop_development
-
 test:
   <<: *default
-  database: pizza_shop_test
+  database: my_pizza_shop_test
+  username: postgres
+  password: postgres
+  host: localhost
 
 production:
   <<: *default
-  database: pizza_shop_production
-  username: pizza_shop
-  password: <%= ENV["PIZZA_SHOP_DATABASE_PASSWORD"] %>
+  url: postgresql://neondb_owner:npg_T0plAyeqXMD5@ep-aged-smoke-a562efje-pooler.us-east-2.aws.neon.tech/pizza_shop_production?sslmode=require&options=endpoint%3Dep-aged-smoke-a562efje-pooler
