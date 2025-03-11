@@ -29,7 +29,15 @@ class PizzasController < ApplicationController
       end
     else
       flash.now[:alert] = @pizza.errors.full_messages.join(', ')
-      render turbo_stream: turbo_stream.replace('flash-container', partial: 'shared/flash_messages'), status: :unprocessable_entity
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.replace('flash-container', partial: 'shared/flash_messages'),
+            turbo_stream.replace('pizza_form', partial: 'form', locals: { pizza: @pizza })
+          ], status: :unprocessable_entity
+        end
+        format.html { render :index, status: :unprocessable_entity }
+      end
     end
   end
 
@@ -60,7 +68,8 @@ class PizzasController < ApplicationController
     else
       respond_to do |format|
         format.turbo_stream do
-          render turbo_stream: turbo_stream.replace('pizza_form', partial: 'form', locals: { pizza: @pizza })
+          render turbo_stream: turbo_stream.replace('pizza_form', partial: 'form', locals: { pizza: @pizza }),
+          status: :unprocessable_entity
         end
         format.html { render :edit, status: :unprocessable_entity }
       end
@@ -80,23 +89,24 @@ class PizzasController < ApplicationController
       end
       format.html { redirect_to pizzas_path, notice: "Pizza was successfully deleted." }
     end
-  rescue ActiveRecord::RecordNotDestroyed => e
-    respond_to do |format|
-      format.turbo_stream do
-        render turbo_stream: turbo_stream.replace("flash-container", partial: "shared/flash_messages", locals: { flash: { alert: "Could not delete pizza." } }),
-               status: :unprocessable_entity
+    rescue ActiveRecord::RecordNotDestroyed => e
+      flash.now[:alert] = "Could not delete pizza: #{e.message}"
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace('flash-container', partial: 'shared/flash_messages'),
+                status: :unprocessable_entity
+        end
+        format.html { redirect_to pizzas_path, alert: "Could not delete pizza." }
       end
-      format.html do
-        flash[:alert] = "Could not delete pizza."
-        redirect_to pizzas_path
-      end
-    end
   end
 
   private
 
   def set_pizza
-    @pizza = Pizza.find_by(id: params[:id])
+    @pizza = Pizza.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    flash[:alert] = "Pizza not found."
+    redirect_to pizzas_path
   end
 
   def set_chef

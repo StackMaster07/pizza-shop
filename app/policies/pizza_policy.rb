@@ -11,6 +11,10 @@ class PizzaPolicy < ApplicationPolicy
     end
   end
 
+  def index?
+    true
+  end
+
   def show?
     user.chef?
   end
