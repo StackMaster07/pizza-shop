@@ -1,0 +1,26 @@
+<tr id="pizza_<%= pizza.id %>">
+  <td><%= pizza.name %></td>
+  <td><%= pizza.description %></td>
+  <td><%= number_to_currency(pizza.price, unit: "$") %></td>
+  <td>
+    <% if pizza.toppings.any? %>
+      <% pizza.toppings.each do |topping| %>
+        <span class="badge bg-success me-1"><%= "#{topping.name} - #{get_topping_quantity(pizza, topping)}x" %></span>
+      <% end %>
+    <% else %>
+      <span class="text-muted">No toppings</span>
+    <% end %>
+  </td>
+  <% if current_user.chef? %>
+    <td class="text-center">
+      <div class="d-flex gap-2 justify-content-center">
+        <%= link_to "Edit", edit_pizza_path(pizza), data: { turbo_frame: "pizza_form" }, class: "btn btn-outline-dark" %>
+        <%= link_to "Delete", pizza_path(pizza), 
+              data: { turbo_method: :delete , turbo_confirm: "Are you sure you want to delete this pizza?" }, 
+              class: "btn btn-outline-dark" %>
+      </div>
+    </td>
+  <% else %>
+    <td><%= pizza.chef.user_name %></td>   
+  <% end %>
+</tr>

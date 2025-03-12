@@ -1,0 +1,32 @@
+<div class="container">
+  <div class="row">
+    <div class="col-lg-7">
+      <div class="card shadow-lg rounded m-2">
+        <div class="card-header bg-success text-white">
+          <h3 class="mb-0 text-center">Toppings List</h3>
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+              <tr>
+                <th>Name</th>
+                <th>In Stock</th>
+                <th>Price per Piece</th>
+                <th class="text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="toppings_list">
+              <%= render partial: "topping", collection: @toppings, as: :topping %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-5">
+      <%= turbo_frame_tag "toppings_form", data: { turbo_cache: "false" } do %> 
+        <%= render "form", topping: Topping.new %>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,39 @@
+<div class="container mt-5">
+  <div class="row">
+    <div class="<%= current_user.chef? ? 'col-lg-7' : 'col-lg-12' %>">
+      <div class="card shadow-lg rounded m-2">
+        <div class="card-header bg-success text-white">
+          <h3 class="mb-0 text-center"><%= current_user.chef? ? "My Pizzas" : "All Pizzas" %></h3>
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+              <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Price($)</th>
+                <th>Toppings</th>
+                <% if current_user.chef? %>
+                  <th class="text-center">Actions</th>
+                <% else %>
+                  <th>Chef Name</th>
+                <% end %>
+              </tr>
+            </thead>
+            <tbody id="pizza_list">
+              <%= render partial: "pizza", collection: @pizzas, as: :pizza %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <% if current_user.chef? %>
+      <div class="col-lg-5">
+        <%= turbo_frame_tag "pizza_form", data: { turbo_cache: "false" } do %> 
+          <%= render "form", pizza: Pizza.new %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>
